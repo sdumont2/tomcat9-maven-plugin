@@ -39,6 +39,16 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <id>sdumont2</id> <!-- Github ID -->
+      <name>Sean Dumont</name>
+      <email>sdumont92@gmail.com</email>
+    </developer>
+  </developers>
+
+  <scmUrl>https://github.com/sdumont2/tomcat9-maven-plugin</scmUrl>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.11</maven.compiler.source>
@@ -56,4 +66,17 @@
     <maven.resources.escapeString>\</maven.resources.escapeString>
 
   </properties>
+
+   <distributionManagement>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Release Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+  </distributionManagement>
 </project>
