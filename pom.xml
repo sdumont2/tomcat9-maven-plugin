@@ -21,15 +21,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.dumontsean</groupId>
-  <artifactId>tomcat9-maven-plugin-parent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <parent>
+    <groupId>com.dumontsean</groupId>
+    <artifactId>dumontsean-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>custom-tomcat9-maven-plugin-parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-
-  <name>Apache Tomcat 9 Maven Plugin</name>
+  <name>Custom Apache Tomcat 9 Maven Plugin</name>
   <description>A custom version of the Tomcat Maven Plugin with Tomcat 9 Dependencies</description>
-  <url>dumontsean.com</url>
+  <url>https://dumontsean.com</url>
 
   <licenses>
     <license>
@@ -47,25 +51,44 @@
     </developer>
   </developers>
 
-  <scmUrl>https://github.com/sdumont2/tomcat9-maven-plugin</scmUrl>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.11</maven.compiler.source>
-    <maven.compiler.target>1.11</maven.compiler.target>
-    <mavenVersion>3.3.9</mavenVersion>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <mavenVersion>3.5.4</mavenVersion>
 
     <mavenPluginPluginVersion>3.6.0</mavenPluginPluginVersion>
 
     <!-- Test settings -->
     <maven.test.redirectTestOutputToFile>false</maven.test.redirectTestOutputToFile>
-    <junit.version>4.10</junit.version>
+    <junit.version>4.13</junit.version>
+    <surefire.version>3.0.0-M4</surefire.version>
+    <failsafe.version>${surefire.version}</failsafe.version>
     <it.sleep.time>2000</it.sleep.time>
+    <!-- http port used to run it test -->
+    <its.http.port>1973</its.http.port>
+    <!-- https port used to run it test -->
+    <its.https.port>2003</its.https.port>
+    <!-- ajp port used to run it test -->
+    <its.ajp.port>2001</its.ajp.port>
+    <!-- server port for it tests -->
+    <its.server.port>2008</its.server.port>
     <verifier.maven.debug>false</verifier.maven.debug>
     <verifier.debugJvm>false</verifier.debugJvm>
     <maven.resources.escapeString>\</maven.resources.escapeString>
 
+    <tomcat9Version>9.0.31</tomcat9Version>
+    <tomcat9EmbedVersion>9.0.0.M6</tomcat9EmbedVersion>
+
   </properties>
+
+  <modules>
+    <module>custom-common-tomcat9-maven-plugin</module>
+    <module>custom-tomcat9-maven-plugin-it</module>
+    <module>custom-tomcat9-war-runner</module>
+    <module>custom-tomcat9-maven-plugin</module>
+    <module>custom-tomcat9-maven-archetype</module>
+  </modules>
 
    <distributionManagement>
     <snapshotRepository>
@@ -79,4 +102,590 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
   </distributionManagement>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Java 11 Dependencies -->
+      <!-- API, java.xml.bind module -->
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+      </dependency>
+
+      <!-- Runtime, com.sun.xml.bind module -->
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+      </dependency>
+      <!--  -->
+      <!-- tomcat dependencies -->
+      <dependency>
+        <groupId>org.eclipse.jdt.core.compiler</groupId>
+        <artifactId>ecj</artifactId>
+        <version>4.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-provider-api</artifactId>
+        <version>3.3.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-archiver</artifactId>
+        <version>3.5.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-archiver</artifactId>
+        <version>4.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-utils</artifactId>
+        <version>3.3.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shared</groupId>
+        <artifactId>maven-filtering</artifactId>
+        <version>3.1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>nekohtml</groupId>
+            <artifactId>xercesMinimal</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.14</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+        <version>1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>1.20</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-classworlds</artifactId>
+        <version>2.6.0</version>
+      </dependency>
+
+      <!-- Test Dependencies -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>junit-addons</groupId>
+        <artifactId>junit-addons</artifactId>
+        <version>1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shared</groupId>
+        <artifactId>maven-verifier</artifactId>
+        <version>1.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.5.11</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.30</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>1.7.30</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.13.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>2.13.1</version>
+      </dependency>
+
+      <!-- start maven version reliant dependencies-->
+      <dependency>
+        <groupId>org.apache.maven.plugin-tools</groupId>
+        <artifactId>maven-plugin-annotations</artifactId>
+        <version>${mavenPluginPluginVersion}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-api</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-artifact-manager</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-artifact</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-project</artifactId>
+        <version>3.0-alpha-2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-core</artifactId>
+        <version>${mavenVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-parameter-documenter</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-repository-metadata</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-error-diagnostics</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-descriptor</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-monitor</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-settings</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <!-- end maven version reliant dependencies -->
+
+      <!-- start project internal dependencies -->
+      <dependency>
+        <groupId>com.dumontsean</groupId>
+        <artifactId>custom-tomcat9-war-runner</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dumontsean</groupId>
+        <artifactId>custom-common-tomcat9-maven-plugin</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dumontsean</groupId>
+        <artifactId>custom-tomcat9-maven-plugin-it</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- end project internal dependencies -->
+
+      <!-- start tomcat dependencies -->
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-util</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-coyote</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-api</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jdbc</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-dbcp</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-servlet-api</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jsp-api</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper-el</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-el-api</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-catalina</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-tribes</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-catalina-ha</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-annotations-api</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-i18n-es</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-i18n-fr</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-i18n-ja</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-juli</artifactId>
+        <version>${tomcat9Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-logging-juli</artifactId>
+        <version>${tomcat9EmbedVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-logging-log4j</artifactId>
+        <version>${tomcat9EmbedVersion}</version>
+      </dependency>
+      <!-- end tomcat dependencies -->
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Override settings inherited from parent POM -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+          <configuration>
+            <encoding>${project.build.sourceEncoding}</encoding>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.target}</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-docck-plugin</artifactId>
+          <version>1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-ear-plugin</artifactId>
+          <version>3.0.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.4.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${surefire.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${failsafe.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-help-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-invoker-plugin</artifactId>
+          <version>3.2.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.0</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.0.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>${mavenPluginPluginVersion}</version>
+          <configuration>
+            <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+          </configuration>
+          <executions>
+            <execution>
+              <id>mojo-descriptor</id>
+              <goals>
+                <goal>descriptor</goal>
+              </goals>
+            </execution>
+            <!-- if you want to generate help goal -->
+            <execution>
+              <id>help-goal</id>
+              <goals>
+                <goal>helpmojo</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-remote-resources-plugin</artifactId>
+          <version>1.7.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-component-metadata</artifactId>
+          <version>2.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.2.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <version>0.13</version>
+          <configuration>
+            <excludes>
+              <exclude>.gitignore</exclude>
+              <exclude>DEPENDENCIES</exclude>
+              <exclude>README.txt</exclude>
+              <exclude>*.sh</exclude>
+              <exclude>.git/**</exclude>
+              <exclude>.idea/**</exclude>
+              <exclude>out/**</exclude>
+              <exclude>.extract/**</exclude>
+              <exclude>*.patch</exclude>
+              <exclude>**/access_log.*</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>rat-verify</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>process-resource-bundles</id>
+            <goals>
+              <goal>process</goal>
+            </goals>
+            <configuration>
+              <resourceBundles>
+                <resourceBundle>org.apache:apache-jar-resource-bundle:1.4</resourceBundle>
+              </resourceBundles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4.1</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>1.11.0</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <linkOnly>true</linkOnly>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>${mavenPluginPluginVersion}</version>
+        <configuration>
+          <requirements>
+            <jdk>${maven.compiler.target}</jdk>
+          </requirements>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
