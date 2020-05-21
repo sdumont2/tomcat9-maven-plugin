@@ -77,7 +77,7 @@
     <verifier.debugJvm>false</verifier.debugJvm>
     <maven.resources.escapeString>\</maven.resources.escapeString>
 
-    <tomcat9Version>9.0.31</tomcat9Version>
+    <tomcat9Version>9.0.35</tomcat9Version>
     <tomcat9EmbedVersion>9.0.0.M6</tomcat9EmbedVersion>
 
   </properties>
